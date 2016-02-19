@@ -5,6 +5,8 @@ var app = express()
 const fs = require('fs');
 var mp3Duration = require('mp3-duration');
 var mm = require('musicmetadata');
+var request = require('request');
+var xml2js = require('xml2js');
 
 var cors= require('cors');
 var songJson
@@ -14,16 +16,38 @@ var songToPlay="";
 app.use(cors());
 
 
-function objSong(songname,data, vote) {
+function objSong(songname, data) {
   this.songname = songname;
   this.data=[data];
-  this.vote = vote;
+  this.vote = 0;
   this.ip = [];
 }
 
 
-
-fs.readdir('./songfiles', (err, data) => {
+request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, res, body) {
+  if (err)
+    return;
+  xml2js.parseString(body, function(err, result) {
+    if (err)
+      return;
+    Promise.all(result.ListBucketResult.Contents.filter(function(data) {
+      return data.Key[0].indexOf("/") != data.Key[0].length - 1;
+    }).map(function(data) {
+      return data.Key[0];
+    }).map(function(data) {
+      return new Promise(function(resolve, reject) {
+        mm(request("http://feathr.io.s3.amazonaws.com/" + data), function(err, metadata) {
+          if (err)
+            reject(err);
+          resolve(new objSong(data, metadata));
+        });
+      });
+    })).then(function(arr) {
+      songJson = arr;
+    });
+  });
+});
+/*fs.readdir('./songfiles', (err, data) => {
   if (err) throw err;
   var results=[];
   data.forEach(function(song) {
@@ -35,7 +59,7 @@ fs.readdir('./songfiles', (err, data) => {
 	}
   });
   songJson = results;
-});
+});*/
 
 
 
@@ -102,5 +126,5 @@ mp3Duration("./songfiles/"+songJson[i].songname, function (err, duration) {
 
 }
 
-app.listen(3000)
+app.listen(9009)
 
