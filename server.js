@@ -1,6 +1,8 @@
 
 var express = require('express')
 var sse = require('connect-sse')
+var session = require('express-session')
+
 const spawn = require('child_process').spawn;
 var app = express()
 app.set('trust proxy', true);
@@ -15,15 +17,24 @@ var cors= require('cors');
 var songJson
 var flag=0;
 var songToPlay="";
-app.use(morgan("dev"));
+app.use(morgan("common"));
 app.use(cors());
+
+app.use(session({
+  secret: 'BeniBoy and Roblabla rule!!',
+  resave: false,
+  saveUninitialized: true
+}))
+
+
+
 
 
 function objSong(songname, data) {
   this.songname = songname;
   this.data=[data];
   this.vote = 0;
-  this.ip = [];
+  this.uuid = [];
 }
 
 
@@ -71,9 +82,9 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
 
 app.post("/song/:id/vote", function(req, res) {
   var songnum=req.params.id;
-  if (songJson[songnum].ip.indexOf(req.connection.remoteAddress) == -1) {
+  if (songJson[songnum].uuid.indexOf(req.sessionID) == -1) {
     songJson[songnum].vote+=1;
-    songJson[songnum].ip.push(req.connection.remoteAddress);
+    songJson[songnum].uuid.push(req.sessionID);
     res.json(songJson[songnum]);
   } else {
     res.json("you already voted");
@@ -111,7 +122,7 @@ function playNextSong(){
   }
   console.log(i);
   songJson[i].vote=0;
-  songJson[i].ip=[];
+  songJson[i].uuid=[];
   console.log("./songfile/"+songJson[i].songname);
   songToPlay=	"./songfiles/"+songJson[i].songname;
 }
