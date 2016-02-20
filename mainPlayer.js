@@ -30,8 +30,7 @@ function httpPostAsync(theUrl, data)
 
 
 function getSource(){
-	httpGetAsync(serverIp+":"+serverPort+"/songtoplay",updateSource);
-    setTimeout(getSource, 1000);
+	httpGetAsync(serverIp+":"+serverPort+"/playnextsong",updateSource);
 }
 
 
@@ -41,18 +40,23 @@ function getSource(){
 
 
 function updateSource(song) { 
-	    if(song!="" && song != oldsong){
+	    data=song.split('/');
         var audio = document.getElementById('audio');
 
         var source = document.getElementById('mp3Source');
-        source.src=song;
+        source.src='http://feathr.io.s3-website-eu-west-1.amazonaws.com/songfiles/'+data[data.length-1];
         
         audio.load(); //call this to just preload the audio without playing
         audio.play(); //call this to play the song right away
 	    oldsong=song;		
-		}
+		
 			
 
     }
 
 getSource();
+audio.addEventListener("ended", function() 
+     {
+	getSource()
+          
+     });
