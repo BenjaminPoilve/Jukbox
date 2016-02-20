@@ -2,6 +2,7 @@ var express = require('express')
 var sse = require('connect-sse')
 const spawn = require('child_process').spawn;
 var app = express()
+app.set('trust proxy', true);
 const fs = require('fs');
 var mp3Duration = require('mp3-duration');
 var mm = require('musicmetadata');
