@@ -67,18 +67,14 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
 
 
 app.post("/song/:id/vote", function(req, res) {
-   var songnum=req.params.id;
-   if (songJson[songnum].ip.indexOf(req.connection.remoteAddress) == -1) {
-   songJson[songnum].vote+=1;
-   songJson[songnum].ip.push(req.connection.remoteAddress);
-   res.json(songJson[songnum]);
-  if(flag==0){
-   playNextSong();
-   flag=1;
-   }
-   }
-   else{
-   res.json("you already voted");}
+  var songnum=req.params.id;
+  if (songJson[songnum].ip.indexOf(req.connection.remoteAddress) == -1) {
+    songJson[songnum].vote+=1;
+    songJson[songnum].ip.push(req.connection.remoteAddress);
+    res.json(songJson[songnum]);
+  } else {
+    res.json("you already voted");
+  }
 });
 
 app.get("/votes",function(req, res) {
@@ -101,30 +97,26 @@ app.get("/songtoplay",function(req, res) {
 
 
 function playNextSong(){
-var votearray= songJson.map(function(v) { return v.vote });
-var sumvote = votearray.reduce(function(pv, cv) { return pv + cv; }, 0);
-console.log(votearray)
-var i
-if(sumvote>0){
- i = votearray.indexOf(Math.max.apply(Math,votearray));}
-else{
-i= Math.floor(Math.random() * (votearray.length));
-}
-console.log(i);
-songJson[i].vote=0;
-songJson[i].ip=[];
-console.log("./songfile/"+songJson[i].songname);
-mp3Duration("./songfiles/"+songJson[i].songname, function (err, duration) {
-  if (err) return console.log(err.message);
-  //spawn("ffplay", [ "-autoexit", "-t" , duration , "./songfiles/"+songJson[i].songname]);
+  var votearray= songJson.map(function(v) { return v.vote });
+  var sumvote = votearray.reduce(function(pv, cv) { return pv + cv; }, 0);
+  console.log(votearray)
+  var i
+  if(sumvote>0){
+   i = votearray.indexOf(Math.max.apply(Math,votearray));}
+  else{
+  i= Math.floor(Math.random() * (votearray.length));
+  }
+  console.log(i);
+  songJson[i].vote=0;
+  songJson[i].ip=[];
+  console.log("./songfile/"+songJson[i].songname);
   songToPlay=	"./songfiles/"+songJson[i].songname;
-  console.log('Your file is ' + duration + ' seconds long');
-    setTimeout(playNextSong,duration*1000);
-
-});               
-
-
 }
+
+app.get("/playnextsong", function(req, res) {
+  playNextSong();
+  return res.json(songToPlay);
+});
 
 app.listen(9009)
 
