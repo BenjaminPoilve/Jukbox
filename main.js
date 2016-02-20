@@ -104,7 +104,7 @@ function localUpdate(){
 		return 1;
 	}
 	if(an = bn) {
-		return cn.toUpperCase().localeCompare(dn.toUpperCase());
+		return dn.toUpperCase().localeCompare(cn.toUpperCase());
 		
 	
 	}
