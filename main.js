@@ -1,5 +1,5 @@
-var serverIp='http://127.0.0.1';
-var serverPort= 3000;
+var serverIp='http://jukebox.cmc.im';
+var serverPort= 80;
 var voteValue=[];
 
 function httpGetAsync(theUrl, callback)

@@ -39,7 +39,7 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
         mm(request("http://feathr.io.s3.amazonaws.com/" + data), function(err, metadata) {
           if (err)
             reject(err);
-          resolve(new objSong(data, metadata));
+          resolve(new objSong(data, [metadata.title , metadata.artist]));
         });
       });
     })).then(function(arr) {
