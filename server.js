@@ -8,6 +8,7 @@ var mp3Duration = require('mp3-duration');
 var mm = require('musicmetadata');
 var request = require('request');
 var xml2js = require('xml2js');
+var deploy = require('./deploy.json');
 
 var cors= require('cors');
 var songJson
@@ -119,5 +120,5 @@ app.get("/playnextsong", function(req, res) {
   return res.json(songToPlay);
 });
 
-app.listen(9009)
+app.listen(deploy.port)
 

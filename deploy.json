@@ -1,6 +1,6 @@
 {
 	"tmux": {
-		"cmd": "node server.js"
+		"cmd": "npm i && node server.js"
 	},
-	"port": 8001
+  "port": 8001
 }
