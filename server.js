@@ -19,12 +19,13 @@ var flag=0;
 var songToPlay="";
 app.use(morgan("common"));
 app.use(cors());
-
-app.use(session({
-  secret: 'BeniBoy and Roblabla rule!!',
-  resave: false,
-  saveUninitialized: true
-}))
+app.use(session({ 
+				secret: 'keyboard cat', 
+				resave: false,
+  				saveUninitialized: true,
+				cookie: { maxAge: 60000 }
+				})
+	   )
 
 
 
