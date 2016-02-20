@@ -37,13 +37,20 @@ function getSongs(){
 }
 
 function voteSong(songnum){
-	console.log(songnum);
-	httpPostAsync(serverIp+':'+serverPort+'/song/'+songnum+'/vote',null)
+console.log(songnum);
+
+	
+setTimeout(getVotes, 300);
+httpPostAsync(serverIp+':'+serverPort+'/song/'+songnum+'/vote',null)
+
+
 }
 
 function updateVotes(votes){
 	voteValue=votes;
-	console.log(votes)
+	 localUpdate();	
+
+	
 }
 
 function updateSongs(songs){
@@ -56,7 +63,6 @@ function updateSongs(songs){
 	     $input.attr('score',0).show();
          $input.attr('value', songs[i][0][0]);
          $input.appendTo($(".clist"));
- 
 		
 		
 	}
@@ -77,9 +83,9 @@ function calculate(event) {
 
 
 
-function updateList(){
-	getVotes()
-    for (var i =0 ; i < voteValue.length; i++) { 
+
+function localUpdate(){
+	for (var i =0 ; i < voteValue.length; i++) { 
 	$( "#"+i ).parent().children(":last").attr('value', voteValue[i]);	
 	$( "#"+i ).parent().attr('score',voteValue[i]);}
 	console.log($(".clist"));
@@ -105,11 +111,9 @@ function updateList(){
 	
 }).appendTo('.clist');	
 	
-	setTimeout(updateList, 1000);
-
+	
 }
-
 
 getSongs();
 getVotes();
-updateList();
+longPoll=window.setInterval(getVotes,5000);
