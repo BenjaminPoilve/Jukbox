@@ -59,10 +59,11 @@ function updateVotes(votes){
 function updateSongs(songs){
 	for (var i =0 ; i < songs.length; i++) { 
 		 console.log(songs[i][0][0]);
-		 var $input = $('  <div ><input type="button" value="new button" onclick="calculate(event);" /> <input type="button"/></div>');
+		 var $input = $('  <div ><input type="button" value="new button" onclick="calculate(event);" /> <input type="text" disabled /></div>');
 		 $input.children(":first").attr('value', songs[i][0][0] + " - " +songs[i][0][1] );
 		 $input.children(":first").attr('id',i);
 		 $input.children(":last").attr('value', 0 );
+		 $input.attr('num',i);
 	     $input.attr('score',0).show();
          $input.attr('value', songs[i][0][0]);
          $input.appendTo($(".clist"));
@@ -97,8 +98,8 @@ function localUpdate(){
 		
 			var an = parseInt(a.getAttribute('score'));
 		    var bn = parseInt(b.getAttribute('score'));
-		    var cn = a.getAttribute('value');
-		    var dn = b.getAttribute('value');
+		    var cn = parseInt(a.getAttribute('num'));
+		    var dn = parseInt(b.getAttribute('num'));
 
 	if(an > bn) {
 		return -1;
@@ -106,9 +107,13 @@ function localUpdate(){
 	if(an < bn) {
 		return 1;
 	}
-	if(an = bn) {
-		return dn.toUpperCase().localeCompare(cn.toUpperCase());
-		
+	if(an == bn) {
+		if(cn > dn) {
+			return 1;
+	    }
+	    if(cn < dn) {
+			return -1;
+		}
 	
 	}
 	

@@ -23,9 +23,12 @@ app.use(cors({
   origin: "http://feathr.io.s3-website-eu-west-1.amazonaws.com"
 }));
 app.use(session({ 
-				secret: 'keyboard cat', 
-				resave: false,
-  				saveUninitialized: true
+	secret: 'keyboard cat', 
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		maxAge: 60 * 60 * 1000
+	}
 }))
 
 
