@@ -1,3 +1,4 @@
+
 var express = require('express')
 var sse = require('connect-sse')
 const spawn = require('child_process').spawn;
@@ -9,12 +10,12 @@ var mm = require('musicmetadata');
 var request = require('request');
 var xml2js = require('xml2js');
 var deploy = require('./deploy.json');
-
+var morgan= require('morgan');
 var cors= require('cors');
 var songJson
 var flag=0;
 var songToPlay="";
-
+app.use(morgan("dev"));
 app.use(cors());
 
 
