@@ -5,6 +5,7 @@ var voteValue=[];
 function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
+	xmlHttp.withCredentials = true;
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(JSON.parse(xmlHttp.responseText));
@@ -17,6 +18,8 @@ function httpGetAsync(theUrl, callback)
 function httpPostAsync(theUrl, data)
 {    
     var xmlHttp = new XMLHttpRequest();
+	xmlHttp.withCredentials = true;
+
 	xmlHttp.onload = function(){
 		 var status = xmlHttp.status; // HTTP response status, e.g., 200 for "200 OK"
          var data = xmlHttp.responseText; // Returned data, e.g., an HTML document.	
