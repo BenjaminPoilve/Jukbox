@@ -18,7 +18,10 @@ var songJson
 var flag=0;
 var songToPlay="";
 app.use(morgan("common"));
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: "http://feathr.io.s3-website-eu-west-1.amazonaws.com"
+}));
 app.use(session({ 
 				secret: 'keyboard cat', 
 				resave: false,
