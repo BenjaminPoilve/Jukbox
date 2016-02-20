@@ -5,7 +5,7 @@ var session = require('express-session')
 
 const spawn = require('child_process').spawn;
 var app = express()
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 const fs = require('fs');
 var mp3Duration = require('mp3-duration');
 var mm = require('musicmetadata');

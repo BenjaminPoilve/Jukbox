@@ -92,8 +92,8 @@ function localUpdate(){
 	
 		$('.clist div').sort(function(a,b) {
 		
-			var an = a.getAttribute('score');
-		    var bn = b.getAttribute('score');
+			var an = parseInt(a.getAttribute('score'));
+		    var bn = parseInt(b.getAttribute('score'));
 		    var cn = a.getAttribute('value');
 		    var dn = b.getAttribute('value');
 
