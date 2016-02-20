@@ -82,6 +82,7 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
 
 app.post("/song/:id/vote", function(req, res) {
   var songnum=req.params.id;
+  console.log(req.sessionID);	
   if (songJson[songnum].uuid.indexOf(req.sessionID) == -1) {
     songJson[songnum].vote+=1;
     songJson[songnum].uuid.push(req.sessionID);
