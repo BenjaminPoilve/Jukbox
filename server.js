@@ -17,6 +17,8 @@ var cors= require('cors');
 var songJson
 var flag=0;
 var songToPlay="";
+var currentSong="";
+
 app.use(morgan("common"));
 app.use(cors({
   credentials: true,
@@ -112,7 +114,7 @@ app.get("/data",function(req, res) {
 
 
 app.get("/songtoplay",function(req, res) {
-  return res.json(songToPlay);
+  return res.json(currentSong);
 });
 
 
@@ -131,6 +133,8 @@ function playNextSong(){
   songJson[i].uuid=[];
   console.log("./songfile/"+songJson[i].songname);
   songToPlay=	"./songfiles/"+songJson[i].songname;
+  currentSong=songJson[i].data;
+	
 }
 
 app.get("/playnextsong", function(req, res) {

@@ -1,6 +1,7 @@
 var serverIp='http://jukebox.cmc.im';
 var serverPort= 80;
 var voteValue=[];
+var CurrentSong;
 
 function httpGetAsync(theUrl, callback)
 {
@@ -38,6 +39,22 @@ function getVotes(){
 function getSongs(){
     httpGetAsync(serverIp+':'+serverPort+'/data',updateSongs);
 }
+
+
+function getCurrentSong(){
+ httpGetAsync(serverIp+':'+serverPort+'/songtoplay',updateCurrent);
+}
+
+
+function updateCurrent(song){
+	console.log(song);
+	$("div.song").text( song );
+	
+	
+	
+}
+
+
 
 function voteSong(songnum){
 console.log(songnum);
@@ -100,6 +117,8 @@ $('#box').keyup(function(){
 
 
 function localUpdate(){
+    getCurrentSong();
+
 	for (var i =0 ; i < voteValue.length; i++) { 
 	$( "#"+i ).parent().children(":last").attr('value', voteValue[i]);	
 	$( "#"+i ).parent().attr('score',voteValue[i]);}
