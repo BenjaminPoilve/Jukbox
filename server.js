@@ -109,7 +109,7 @@ app.get("/api/song",function(req, res) {
 
 app.get("/api/votedfor",function(req, res) {
 	var voteArray=[];
-	for(int i =0; i<songJson.lenght){
+	for(var i =0; i<songJson.length; i++){
 		if (songJson[i].uuid.indexOf(req.sessionID) ==1 ){
 			voteArray[i]=0;}
 		else{
@@ -118,10 +118,7 @@ app.get("/api/votedfor",function(req, res) {
 		}
    return res.json(voteArray);
 	
-		
-	}
-  return res.json(songJson.map(function( v) { return v.songname }));
-});
+ });
 
 
 app.get("/api/data",function(req, res) {
