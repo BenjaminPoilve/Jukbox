@@ -51,7 +51,7 @@ function votedfor(formervotes){
 		for (var i =0 ; i < formervotes.length; i++) {
 			 console.log(formervotes[i]);
 			if(formervotes[i]==0){
-				$( "#"+i ).attr("class","todo-done");
+				$( "#"+i ).attr("class","todo-done");}
 			if(formervotes[i]==1){
 				$( "#"+i ).attr("class","");
 				
