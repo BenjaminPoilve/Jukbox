@@ -1,6 +1,15 @@
-{
-	"tmux": {
-		"cmd": "npm i && node server.js"
-	},
-  "port": 8001
-}
+[
+  {
+    "location": "/",
+    "type": "proxy",
+    "port": 8001,
+    "tmux": {
+      "cmd": "npm i && node server.js"
+    }
+  },
+  {
+    "location": "= /index.html",
+    "type": "static",
+    "path": "."
+  }
+]
