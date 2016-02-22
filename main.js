@@ -40,9 +40,31 @@ function getSongs(){
     httpGetAsync(serverIp+':'+serverPort+'/api/data',updateSongs);
 }
 
+function checkVoted(){
+    httpGetAsync(serverIp+':'+serverPort+'/api/votedfor',updateUI);
+}
+
 
 function getCurrentSong(){
  httpGetAsync(serverIp+':'+serverPort+'/api/songtoplay',updateCurrent);
+}
+
+
+function updateCurrent(formervotes){
+		for (var i =0 ; i < formervotes.length; i++) {
+			if(formervotes[i]==0){
+				$( "#"+i ).attr("class","todo-done");
+			}else{
+				$( "#"+i ).attr("class","todo");
+				
+			}
+	}
+
+		
+			
+
+
+	
 }
 
 
@@ -132,7 +154,9 @@ function localUpdate(){
 		        $( "#"+i ).children(":first").text( voteValue[i]);
 				$( "#"+i ).attr('score', voteValue[i]);
 		     
-
+                if(voteValue[i]==0){
+						$( "#"+i ).attr("class","todo");
+				}
 	}
 
 	
