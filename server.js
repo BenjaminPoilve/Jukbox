@@ -138,5 +138,5 @@ app.get("/playnextsong", function(req, res) {
   return res.json(songToPlay);
 });
 
-app.listen(deploy.port)
-
+app.listen(deploy[0].port)
+console.log("Listening on port " + deploy[0].port);
