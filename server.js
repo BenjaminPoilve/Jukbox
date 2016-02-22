@@ -110,7 +110,7 @@ app.get("/api/song",function(req, res) {
 app.get("/api/votedfor",function(req, res) {
 	var voteArray=[];
 	for(var i =0; i<songJson.length; i++){
-		if (songJson[i].uuid.indexOf(req.sessionID) ==1 ){
+		if (songJson[i].uuid.indexOf(req.sessionID) != -1 ){
 			voteArray[i]=0;}
 		else{
 			voteArray[i]=1;
