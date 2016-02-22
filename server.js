@@ -22,7 +22,7 @@ var currentSong="";
 app.use(morgan("common"));
 app.use(cors({
   credentials: true,
-  origin: "http://feathr.io.s3-website-eu-west-1.amazonaws.com"
+  origin: "http://jukebox.cmc.im"
 }));
 app.use(session({ 
 	secret: 'keyboard cat', 

@@ -76,14 +76,19 @@ function updateVotes(votes){
 function updateSongs(songs){
 	for (var i =0 ; i < songs.length; i++) { 
 		 console.log(songs[i][0][0]);
-		 var $input = $('  <div ><input type="button" value="new button" onclick="calculate(event);" /> <input type="text" disabled /></div>');
-		 $input.children(":first").attr('value', songs[i][0][0] + " - " +songs[i][0][1] );
-		 $input.children(":first").attr('id',i);
-		 $input.children(":last").attr('value', 0 );
-		 $input.attr('num',i);
-	     $input.attr('score',0).show();
-         $input.attr('value', songs[i][0][0]);
-         $input.appendTo($(".clist"));
+		
+		 var $input = $( '<li><div class="todo-icon ">0</div><div class="todo-content"></div></li>')
+		 $input.on('click', calculate);
+		 $input.attr('id',i);
+		 $input.attr('value', songs[i][0][0]);
+		 $input.children(":first").attr('score', 0 );
+		 $input.children(":first").text( 0 );
+         $input.children(":last").attr('value', songs[i][0][0] + " - " +songs[i][0][1] );
+		
+	
+		$input.children(":last").append('<h4 class="todo-name">'+songs[i][0][0]+'</h4>'+songs[i][0][1]);
+		 
+         $input.appendTo($("#list ul"));
 		
 		
 	}
@@ -94,20 +99,23 @@ function updateSongs(songs){
 
 
 function calculate(event) {
-	var num=event.target.id;
+	$(this).attr("class","todo-done");
+	var num=this.id;
 	voteSong(num);
 	//updateList();
 	
-
 }
+
+
+
 $(document).ready(function(){
 $('#box').keyup(function(){
    var valThis = $(this).val().toLowerCase();
     if(valThis == ""){
-        $('.clist > div').show();           
+        $('.navList > li').show();           
     } else {
-        $('.clist > div').each(function(){
-            var text = $(this).children(":first").attr('value').toLowerCase();
+        $('.navList > li').each(function(){
+           var text = $(this).children(":last").attr('value').toLowerCase();
             (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
         });
    };
@@ -120,16 +128,20 @@ function localUpdate(){
     getCurrentSong();
 
 	for (var i =0 ; i < voteValue.length; i++) { 
-	$( "#"+i ).parent().children(":last").attr('value', voteValue[i]);	
-	$( "#"+i ).parent().attr('score',voteValue[i]);}
-	console.log($(".clist"));
+			 	$( "#"+i ).children(":first").attr('score', voteValue[i]);
+		        $( "#"+i ).children(":first").text( voteValue[i]);
+				$( "#"+i ).attr('score', voteValue[i]);
+		     
+
+	}
+
 	
-		$('.clist div').sort(function(a,b) {
+		$('.navList li').sort(function(a,b) {
 		
 			var an = parseInt(a.getAttribute('score'));
 		    var bn = parseInt(b.getAttribute('score'));
-		    var cn = parseInt(a.getAttribute('num'));
-		    var dn = parseInt(b.getAttribute('num'));
+		    var cn = parseInt(a.getAttribute('id'));
+		    var dn = parseInt(b.getAttribute('id'));
 
 	if(an > bn) {
 		return -1;
@@ -147,7 +159,7 @@ function localUpdate(){
 	
 	}
 	
-}).appendTo('.clist');	
+}).appendTo('.navList');	
 	
 	
 }
