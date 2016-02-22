@@ -41,7 +41,7 @@ function getSongs(){
 }
 
 function getVotedFor(){
- httpGetAsync(serverIp+':'+serverPort+'/api/songtoplay',votedfor);
+ httpGetAsync(serverIp+':'+serverPort+'/api/votedfor',votedfor);
 }
 
 
@@ -160,7 +160,7 @@ function localUpdate(){
 				$( "#"+i ).attr('score', voteValue[i]);
 		     
                 if(voteValue[i]==0){
-						$( "#"+i ).attr("class","todo");
+						$( "#"+i ).attr("class","");
 				}
 	}
 
