@@ -87,7 +87,7 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
 
 
 
-app.post("/song/:id/vote", function(req, res) {
+app.post("/api/song/:id/vote", function(req, res) {
   var songnum=req.params.id;
   console.log(req.sessionID);	
   if (songJson[songnum].uuid.indexOf(req.sessionID) == -1) {
@@ -99,21 +99,21 @@ app.post("/song/:id/vote", function(req, res) {
   }
 });
 
-app.get("/votes",function(req, res) {
+app.get("/api/votes",function(req, res) {
   return res.json(songJson.map(function( v) { return v.vote }));
 });
 
-app.get("/song",function(req, res) {
+app.get("/api/song",function(req, res) {
   return res.json(songJson.map(function( v) { return v.songname }));
 });
 
 
-app.get("/data",function(req, res) {
+app.get("/api/data",function(req, res) {
   return res.json(songJson.map(function( v) { return v.data }));
 });
 
 
-app.get("/songtoplay",function(req, res) {
+app.get("/api/songtoplay",function(req, res) {
   return res.json(currentSong);
 });
 
@@ -137,7 +137,7 @@ function playNextSong(){
 	
 }
 
-app.get("/playnextsong", function(req, res) {
+app.get("/api/playnextsong", function(req, res) {
   playNextSong();
   return res.json(songToPlay);
 });

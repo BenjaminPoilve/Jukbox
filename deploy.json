@@ -1,6 +1,6 @@
 [
   {
-    "location": "/",
+    "location": "/api",
     "type": "proxy",
     "port": 8001,
     "tmux": {
@@ -8,7 +8,7 @@
     }
   },
   {
-    "location": "= /index.html",
+    "location": "/",
     "type": "static",
     "path": "."
   }

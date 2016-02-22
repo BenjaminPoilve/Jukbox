@@ -30,7 +30,7 @@ function httpPostAsync(theUrl, data)
 
 
 function getSource(){
-	httpGetAsync(serverIp+":"+serverPort+"/playnextsong",updateSource);
+	httpGetAsync(serverIp+":"+serverPort+"/api/playnextsong",updateSource);
 }
 
 

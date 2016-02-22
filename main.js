@@ -32,17 +32,17 @@ function httpPostAsync(theUrl, data)
 
 
 function getVotes(){
-	httpGetAsync(serverIp+":"+serverPort+"/votes",updateVotes);
+	httpGetAsync(serverIp+":"+serverPort+"/api/votes",updateVotes);
 }
 
 
 function getSongs(){
-    httpGetAsync(serverIp+':'+serverPort+'/data',updateSongs);
+    httpGetAsync(serverIp+':'+serverPort+'/api/data',updateSongs);
 }
 
 
 function getCurrentSong(){
- httpGetAsync(serverIp+':'+serverPort+'/songtoplay',updateCurrent);
+ httpGetAsync(serverIp+':'+serverPort+'/api/songtoplay',updateCurrent);
 }
 
 
@@ -61,7 +61,7 @@ console.log(songnum);
 
 	
 setTimeout(getVotes, 300);
-httpPostAsync(serverIp+':'+serverPort+'/song/'+songnum+'/vote',null)
+httpPostAsync(serverIp+':'+serverPort+'/api/song/'+songnum+'/vote',null)
 
 
 }
