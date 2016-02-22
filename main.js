@@ -83,8 +83,19 @@ function calculate(event) {
 	
 
 }
-
-
+$(document).ready(function(){
+$('#box').keyup(function(){
+   var valThis = $(this).val().toLowerCase();
+    if(valThis == ""){
+        $('.clist > div').show();           
+    } else {
+        $('.clist > div').each(function(){
+            var text = $(this).children(":first").attr('value').toLowerCase();
+            (text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+        });
+   };
+});
+	});
 
 
 
