@@ -46,11 +46,14 @@ function getVotedFor(){
 
 
 function votedfor(formervotes){
+	    console.log(formervotes);
+	    
 		for (var i =0 ; i < formervotes.length; i++) {
+			 console.log(formervotes[i]);
 			if(formervotes[i]==0){
 				$( "#"+i ).attr("class","todo-done");
-			}else{
-				$( "#"+i ).attr("class","todo");
+			if(formervotes[i]==1){
+				$( "#"+i ).attr("class","");
 				
 			}
 	}
