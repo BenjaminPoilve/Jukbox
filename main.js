@@ -40,17 +40,12 @@ function getSongs(){
     httpGetAsync(serverIp+':'+serverPort+'/api/data',updateSongs);
 }
 
-function checkVoted(){
-    httpGetAsync(serverIp+':'+serverPort+'/api/votedfor',updateUI);
+function getVotedFor(){
+ httpGetAsync(serverIp+':'+serverPort+'/api/songtoplay',votedfor);
 }
 
 
-function getCurrentSong(){
- httpGetAsync(serverIp+':'+serverPort+'/api/songtoplay',updateCurrent);
-}
-
-
-function updateCurrent(formervotes){
+function votedfor(formervotes){
 		for (var i =0 ; i < formervotes.length; i++) {
 			if(formervotes[i]==0){
 				$( "#"+i ).attr("class","todo-done");
@@ -65,6 +60,11 @@ function updateCurrent(formervotes){
 
 
 	
+}
+
+
+function getCurrentSong(){
+ httpGetAsync(serverIp+':'+serverPort+'/api/songtoplay',updateCurrent);
 }
 
 
@@ -114,6 +114,8 @@ function updateSongs(songs){
 		
 		
 	}
+	
+	getVotedFor();
 }
 
 
