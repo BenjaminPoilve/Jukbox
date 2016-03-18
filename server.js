@@ -15,7 +15,10 @@ var morgan= require('morgan');
 var cors= require('cors');
 var sqlite3 = require('sqlite3').verbose();
 //var songJson
-var flag=0;
+
+var CSRF_id = 0;
+
+
 var songToPlay="";
 var currentSong="";
 
@@ -164,20 +167,28 @@ function playNextSong(){
 }
 
 app.get("/api/playnextsong", function(req, res, next) {
-	// SELECT * FROM song ORDER BY vote DESC LIMIT 1
-  songdb.get("SELECT * FROM song ORDER BY vote DESC LIMIT 1", function(err, row) {
-    if (err)
-	  return next(err);
-    songdb.run("UPDATE song SET vote=0 WHERE id=?", row.id, function(err) {
+  // SELECT * FROM song ORDER BY vote DESC LIMIT 1
+  console.log(req.query.cors_id, CSRF_id);
+  if (req.query.cors_id == CSRF_id) {
+    CSRF_id++;
+    songdb.get("SELECT * FROM song ORDER BY vote DESC LIMIT 1", function(err, row) {
       if (err)
-		return next(err);
-      songdb.run("DELETE FROM vote WHERE song_id=?", row.id, function(err) {
-		if (err)
-		  return next(err);
-        return res.json(row);
+        return next(err);
+      songdb.run("UPDATE song SET vote=0 WHERE id=?", row.id, function(err) {
+        if (err)
+          return next(err);
+        songdb.run("DELETE FROM vote WHERE song_id=?", row.id, function(err) {
+          if (err)
+            return next(err);
+          currentSong = row;
+          console.log(row);
+          return res.json({ song: row, cors_id: CSRF_id });
+        });
       });
     });
-  });
+  } else {
+    return res.json({ song: currentSong, cors_id: CSRF_id });
+  }
 });
 
 app.listen(deploy[0].port)

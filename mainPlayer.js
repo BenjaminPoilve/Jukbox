@@ -1,7 +1,7 @@
 var serverIp='http://localhost';
 var serverPort= 8001;
 var oldsong="";
-
+var cors_id = 0;
 
 function httpGetAsync(theUrl, callback)
 {
@@ -30,7 +30,7 @@ function httpPostAsync(theUrl, data)
 
 
 function getSource(){
-	httpGetAsync(serverIp+":"+serverPort+"/api/playnextsong",updateSource);
+	httpGetAsync(serverIp+":"+serverPort+"/api/playnextsong?cors_id=" + cors_id,updateSource);
 }
 
 
@@ -39,16 +39,17 @@ function getSource(){
 
 
 
-function updateSource(song) { 
+function updateSource(song) {
+  cors_id = song.cors_id;
 	    //data=song.split('/');
         var audio = document.getElementById('audio');
 
         var source = document.getElementById('mp3Source');
         //source.src='http://feathr.io.s3-website-eu-west-1.amazonaws.com/songfiles/'+data[data.length-1];
-        source.src = song.src;
+        source.src = song.song.src;
         audio.load(); //call this to just preload the audio without playing
         audio.play(); //call this to play the song right away
-	    oldsong=song;		
+	    oldsong=song.song;
 		
 			
 
