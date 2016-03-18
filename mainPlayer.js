@@ -1,5 +1,5 @@
-var serverIp='http://localhost';
-var serverPort= 8001;
+var serverIp='http://jukebox.cmc.im';
+var serverPort= 80;
 var oldsong="";
 var cors_id = 0;
 
