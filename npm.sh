@@ -1,0 +1,10 @@
+npm install express
+npm install connect-sse
+npm install express-session
+npm install mp3-duration
+npm install musicmetadata
+npm install request
+npm install xml2js
+npm install morgan
+npm install cors
+npm install sqlite3

@@ -1,5 +1,5 @@
-var serverIp='http://jukebox.cmc.im';
-var serverPort= 80;
+var serverIp='http://localhost';
+var serverPort= 8001;
 var oldsong="";
 
 
@@ -40,12 +40,12 @@ function getSource(){
 
 
 function updateSource(song) { 
-	    data=song.split('/');
+	    //data=song.split('/');
         var audio = document.getElementById('audio');
 
         var source = document.getElementById('mp3Source');
-        source.src='http://feathr.io.s3-website-eu-west-1.amazonaws.com/songfiles/'+data[data.length-1];
-        
+        //source.src='http://feathr.io.s3-website-eu-west-1.amazonaws.com/songfiles/'+data[data.length-1];
+        source.src = song.src;
         audio.load(); //call this to just preload the audio without playing
         audio.play(); //call this to play the song right away
 	    oldsong=song;		

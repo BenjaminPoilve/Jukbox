@@ -1,4 +1,3 @@
-
 var express = require('express')
 var sse = require('connect-sse')
 var session = require('express-session')
@@ -14,7 +13,8 @@ var xml2js = require('xml2js');
 var deploy = require('./deploy.json');
 var morgan= require('morgan');
 var cors= require('cors');
-var songJson
+var sqlite3 = require('sqlite3').verbose();
+//var songJson
 var flag=0;
 var songToPlay="";
 var currentSong="";
@@ -22,7 +22,7 @@ var currentSong="";
 app.use(morgan("common"));
 app.use(cors({
   credentials: true,
-  origin: "http://jukebox.cmc.im"
+  origin: "localhost"
 }));
 app.use(session({ 
 	secret: 'keyboard cat', 
@@ -31,19 +31,15 @@ app.use(session({
 	cookie: {
 		maxAge: 60 * 60 * 1000
 	}
-}))
+}));
 
+app.use(express.static("."));
 
-
-
-
-function objSong(songname, data) {
+/*function objSong(songname, id, vote) {
   this.songname = songname;
-  this.data=[data];
-  this.vote = 0;
-  this.uuid = [];
+  this.id = id;
+  this.vote = vote;
 }
-
 
 request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, res, body) {
   if (err)
@@ -67,7 +63,27 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
       songJson = arr;
     });
   });
+});*/
+
+var songdb = new sqlite3.Database('songdb_base');
+
+songdb.serialize(function() {
+    songdb.run("CREATE TABLE IF NOT EXISTS song (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, artist VARCHAR, src VARCHAR,  vote INTEGER DEFAULT 0)");
+    songdb.run("CREATE TABLE IF NOT EXISTS vote (song_id INTEGER, session_id VARCHAR, CONSTRAINT unique_id UNIQUE (song_id, session_id))");
 });
+
+
+
+
+// id PRIMARY KEY,
+// title, artist, album, VARCHAR(255)
+// vote INTEGER,
+// url mp3 VARCHAR(255)
+
+// song_id FOREIGN KEY song
+// session_id VARCHAR(255)
+// UNIQUE (song_id, session_id)
+
 /*fs.readdir('./songfiles', (err, data) => {
   if (err) throw err;
   var results=[];
@@ -82,54 +98,51 @@ request("http://feathr.io.s3.amazonaws.com/?prefix=songfiles/", function(err, re
   songJson = results;
 });*/
 
-
-
-
-
-
-app.post("/api/song/:id/vote", function(req, res) {
-  var songnum=req.params.id;
-  console.log(req.sessionID);	
-  if (songJson[songnum].uuid.indexOf(req.sessionID) == -1) {
-    songJson[songnum].vote+=1;
-    songJson[songnum].uuid.push(req.sessionID);
-    res.json(songJson[songnum]);
-  } else {
-    res.json("you already voted");
-  }
+app.post("/api/song/:id/vote", function(req, res, next) {
+  // UPDATE song SET vote=vote+1 WHERE name=?
+  var query = songdb.prepare("INSERT INTO vote VALUES (?, ?)");
+  query.run(req.params.id, req.sessionID, function(err) {
+    if (err)
+      return res.json("You already voted");
+  	songdb.run("UPDATE song SET vote=vote+1 WHERE id=?", req.params.id, function(err) {
+		if (err)
+			return next(err);
+    	res.json(true);
+	});	
+  });
 });
 
-app.get("/api/votes",function(req, res) {
-  return res.json(songJson.map(function( v) { return v.vote }));
+app.get("/api/votes",function(req, res, next) {
+  var query = songdb.all("SELECT id, vote FROM song", function(err, rows) {
+    if (err)
+	  return next(err);
+  	return res.json(rows);
+  });
 });
 
 app.get("/api/song",function(req, res) {
   return res.json(songJson.map(function( v) { return v.songname }));
 });
 
-app.get("/api/votedfor",function(req, res) {
-	var voteArray=[];
-	for(var i =0; i<songJson.length; i++){
-		if (songJson[i].uuid.indexOf(req.sessionID) != -1 ){
-			voteArray[i]=0;}
-		else{
-			voteArray[i]=1;
-		}
-		}
-   return res.json(voteArray);
-	
+app.get("/api/votedfor",function(req, res, next) {
+	songdb.all("SELECT * FROM vote WHERE session_id=?", req.sessionID, function (err, rows) {
+		if (err)
+			return next(err);
+		return res.json(rows)
+	})
  });
 
-
 app.get("/api/data",function(req, res) {
-  return res.json(songJson.map(function( v) { return v.data }));
+  var query = songdb.all("SELECT * FROM song", function(err, rows) {
+    if (err)
+	  return next(err);
+  	return res.json(rows);
+  });
 });
-
 
 app.get("/api/songtoplay",function(req, res) {
   return res.json(currentSong);
 });
-
 
 function playNextSong(){
   var votearray= songJson.map(function(v) { return v.vote });
@@ -150,9 +163,21 @@ function playNextSong(){
 	
 }
 
-app.get("/api/playnextsong", function(req, res) {
-  playNextSong();
-  return res.json(songToPlay);
+app.get("/api/playnextsong", function(req, res, next) {
+	// SELECT * FROM song ORDER BY vote DESC LIMIT 1
+  songdb.get("SELECT * FROM song ORDER BY vote DESC LIMIT 1", function(err, row) {
+    if (err)
+	  return next(err);
+    songdb.run("UPDATE song SET vote=0 WHERE id=?", row.id, function(err) {
+      if (err)
+		return next(err);
+      songdb.run("DELETE FROM vote WHERE song_id=?", row.id, function(err) {
+		if (err)
+		  return next(err);
+        return res.json(row);
+      });
+    });
+  });
 });
 
 app.listen(deploy[0].port)
